@@ -288,7 +288,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                 <thead className="bg-slate-50 dark:bg-slate-900">
                   <tr>
                     {headers.map((h: string, ci: number) => (
-                      <th key={ci} className="px-4 py-3 font-extrabold text-slate-600 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                      <th key={ci} className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
                         {h}
                       </th>
                     ))}
@@ -298,7 +298,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                   {rows.map((row: string[], ri: number) => (
                     <tr key={ri} className="bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
                       {row.map((cell: string, ci: number) => (
-                        <td key={ci} className="px-4 py-3 text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
+                        <td key={ci} className="px-2 py-2 sm:px-4 sm:py-3 text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
                           {cell}
                         </td>
                       ))}
@@ -440,9 +440,10 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
         if (type === "grid_layout") {
           const cols = data.columns || 3;
           const childBlocks = (data.blocks || []).filter((b: Block) => b.visible !== false);
+          const gridCols = cols <= 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
           return (
             <div key={id} className="my-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" style={{ gridTemplateColumns: `repeat(${Math.min(cols, 4)}, 1fr)` }}>
+              <div className={`grid grid-cols-1 gap-4 ${gridCols}`}>
                 {childBlocks.map((child: Block) => (
                   <BlockRenderer key={child.id} blocks={[child]} preview={preview} />
                 ))}
@@ -642,21 +643,21 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 dark:bg-slate-900">
                     <tr>
-                      <th className="px-4 py-3 font-extrabold text-slate-600 dark:text-slate-400">Station</th>
-                      <th className="px-4 py-3 font-extrabold text-slate-600 dark:text-slate-400">Code</th>
-                      <th className="px-4 py-3 font-extrabold text-slate-600 dark:text-slate-400">Zone</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Station</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Code</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Zone</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {stations.map((s: any, idx: number) => (
                       <tr key={idx} className="bg-white transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
-                        <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{s.name}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{s.name}</td>
+                        <td className="px-2 py-2 sm:px-4 sm:py-3">
                           <span className="inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                             {s.code}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{s.zone}</td>
+                        <td className="px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{s.zone}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -679,19 +680,19 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-red-50 dark:bg-red-950/20">
                     <tr>
-                      <th className="px-4 py-3 font-extrabold text-slate-700 dark:text-slate-300">Service</th>
-                      <th className="px-4 py-3 font-extrabold text-slate-700 dark:text-slate-300">Number</th>
-                      <th className="px-4 py-3 font-extrabold text-slate-700 dark:text-slate-300">Description</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Service</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Number</th>
+                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Description</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {contacts.map((c: any, idx: number) => (
                       <tr key={idx} className="bg-white transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
-                        <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{c.service}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{c.service}</td>
+                        <td className="px-2 py-2 sm:px-4 sm:py-3">
                           <a href={`tel:${c.number}`} className="font-bold text-blue-600 hover:underline dark:text-blue-400">{c.number}</a>
                         </td>
-                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.description}</td>
+                        <td className="px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{c.description}</td>
                       </tr>
                     ))}
                   </tbody>

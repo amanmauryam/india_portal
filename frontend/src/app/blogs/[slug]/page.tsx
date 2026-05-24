@@ -67,7 +67,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<Param
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 flex-1">
         <Breadcrumb items={breadcrumbs} />
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 dark:border-slate-800 dark:bg-slate-900">
+        <article className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-10 dark:border-slate-800 dark:bg-slate-900">
           
           {/* Header Metadata */}
           <header className="border-b border-slate-100 pb-6 dark:border-slate-800">
