@@ -1,0 +1,13 @@
+node_modules/
+.next/
+*.pyc
+__pycache__/
+.env
+.env.local
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/.vercel
+*.log
+.DS_Store
+dist/
+build/
