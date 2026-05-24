@@ -64,34 +64,34 @@ export default async function BlogDetailPage({ params }: { params: Promise<Param
     <>
       <Navbar />
       
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 flex-1">
+      <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 flex-1">
         <Breadcrumb items={breadcrumbs} />
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-10 dark:border-slate-800 dark:bg-slate-900">
+        <article className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-10 dark:border-slate-800 dark:bg-slate-900">
           
           {/* Header Metadata */}
-          <header className="border-b border-slate-100 pb-6 dark:border-slate-800">
+          <header className="border-b border-slate-100 pb-4 sm:pb-6 dark:border-slate-800">
             <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-[10px] font-bold text-red-700 dark:bg-red-950/30 dark:text-red-400">
               <ShieldAlert className="h-3 w-3" /> Anti-Fraud Advisory
             </span>
-            <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3.5xl leading-tight">
+            <h1 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
               {post.title}
             </h1>
             
-            <div className="mt-6 flex flex-wrap gap-4 text-xs font-semibold text-slate-400">
+            <div className="mt-4 sm:mt-6 flex flex-wrap gap-3 sm:gap-4 text-xs font-semibold text-slate-400">
               <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4 shrink-0" />
                 <span>Written by: <span className="text-slate-850 dark:text-slate-300">{post.author_name}</span></span>
               </div>
               <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="h-4 w-4 shrink-0" />
                 <span>{new Date(post.created_at).toLocaleDateString("en-IN", { day: 'numeric', month: 'long', year: 'numeric' })}</span>
               </div>
             </div>
           </header>
 
           {/* Dynamic Block-based Content Body */}
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <BlockRenderer blocks={post.content_blocks} />
           </div>
           

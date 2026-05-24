@@ -42,11 +42,11 @@ export default async function StatesPage({
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 flex-1">
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 flex-1">
         <Breadcrumb items={breadcrumbs} />
 
-        <div className="mb-10">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+        <div className="mb-8 sm:mb-10">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             All States Directory
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -65,7 +65,7 @@ export default async function StatesPage({
                 <Link
                   key={state.id}
                   href={`/${state.slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 text-slate-600 dark:bg-slate-850 dark:text-slate-300">
                     <Landmark className="h-5 w-5 transition-transform group-hover:scale-110" />

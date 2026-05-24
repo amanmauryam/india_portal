@@ -90,7 +90,7 @@ export default async function HomePage() {
                 <Link
                   key={state.id}
                   href={`/${state.slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 text-slate-600 dark:bg-slate-850 dark:text-slate-300">
                     <Landmark className="h-5 w-5 transition-transform group-hover:scale-110" />
@@ -139,7 +139,7 @@ export default async function HomePage() {
                 {blogs.map((post) => (
                   <div
                     key={post.id}
-                    className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+                    className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
                   >
                     <div>
                       <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-[10px] font-bold text-red-700 dark:bg-red-950/30 dark:text-red-400">

@@ -19,23 +19,23 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
   }
 
   return (
-    <nav className="mt-10 flex items-center justify-center gap-1.5">
+    <nav className="mt-8 sm:mt-10 flex items-center justify-center gap-1 sm:gap-1.5 flex-wrap">
       {currentPage > 1 && (
         <Link
           href={`${basePath}?page=${currentPage - 1}`}
-          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300"
+          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2 sm:px-3 py-2 text-xs font-bold text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300"
         >
           Previous
         </Link>
       )}
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`ellipsis-${i}`} className="px-2 text-xs text-slate-400">...</span>
+          <span key={`ellipsis-${i}`} className="px-1 sm:px-2 text-xs text-slate-400">...</span>
         ) : (
           <Link
             key={p}
             href={`${basePath}?page=${p}`}
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold ${
+            className={`inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg text-xs font-bold ${
               p === currentPage
                 ? "bg-blue-600 text-white"
                 : "border border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300"
@@ -48,7 +48,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
       {currentPage < totalPages && (
         <Link
           href={`${basePath}?page=${currentPage + 1}`}
-          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300"
+          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2 sm:px-3 py-2 text-xs font-bold text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300"
         >
           Next
         </Link>

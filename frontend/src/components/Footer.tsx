@@ -5,10 +5,10 @@ import CookiePreferencesButton from "./CookiePreferencesButton";
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         
         {/* Anti-Fraud Public Advisory Banner */}
-        <div className="mb-10 rounded-2xl border border-amber-200/80 bg-amber-50/50 p-4 dark:border-amber-900/40 dark:bg-amber-950/20">
+        <div className="mb-8 sm:mb-10 rounded-2xl border border-amber-200/80 bg-amber-50/50 p-3 sm:p-4 dark:border-amber-900/40 dark:bg-amber-950/20">
           <div className="flex gap-3">
             <ShieldAlert className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-500" />
             <div>

@@ -123,12 +123,12 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           const text = data.text || "";
           const common = "font-extrabold tracking-tight text-slate-900 dark:text-white scroll-mt-20";
           const sizes: Record<number, string> = {
-            1: "text-4xl sm:text-5xl lg:text-6xl mt-10 mb-6",
-            2: "text-2xl sm:text-3xl lg:text-4xl mt-9 mb-4",
-            3: "text-xl sm:text-2xl lg:text-3xl mt-8 mb-3",
-            4: "text-lg sm:text-xl lg:text-2xl mt-6 mb-2",
-            5: "text-base sm:text-lg lg:text-xl mt-5 mb-2",
-            6: "text-sm sm:text-base lg:text-lg mt-4 mb-1",
+            1: "text-3xl sm:text-4xl lg:text-5xl mt-8 mb-4 sm:mt-10 sm:mb-6",
+            2: "text-xl sm:text-2xl lg:text-4xl mt-6 mb-3 sm:mt-9 sm:mb-4",
+            3: "text-lg sm:text-xl lg:text-3xl mt-5 mb-2 sm:mt-8 sm:mb-3",
+            4: "text-base sm:text-lg lg:text-2xl mt-4 mb-2 sm:mt-6",
+            5: "text-sm sm:text-base lg:text-xl mt-3 mb-1 sm:mt-5",
+            6: "text-sm sm:text-base lg:text-lg mt-3 mb-1 sm:mt-4",
           };
           return createElement(
             `h${level}` as any,
@@ -269,7 +269,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
             <div key={id} className="my-6">
               <ListTag className={`space-y-2 ${isNum ? "list-decimal" : "list-disc"} pl-5`}>
                 {items.map((item: any, idx: number) => (
-                  <li key={idx} className="text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300 pl-1">
+                  <li key={idx} className="text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300 pl-1 break-words">
                     {item.text}
                   </li>
                 ))}
@@ -284,11 +284,11 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           if (headers.length === 0) return null;
           return (
             <div key={id} className="my-8 overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left text-xs sm:text-sm">
                 <thead className="bg-slate-50 dark:bg-slate-900">
                   <tr>
                     {headers.map((h: string, ci: number) => (
-                      <th key={ci} className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
+                      <th key={ci} className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 last:border-r-0">
                         {h}
                       </th>
                     ))}
@@ -298,7 +298,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                   {rows.map((row: string[], ri: number) => (
                     <tr key={ri} className="bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
                       {row.map((cell: string, ci: number) => (
-                        <td key={ci} className="px-2 py-2 sm:px-4 sm:py-3 text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
+                        <td key={ci} className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
                           {cell}
                         </td>
                       ))}
@@ -337,7 +337,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {images.map((img: any, idx: number) => (
                   <figure key={idx} className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/35">
-                    <img src={img.url} alt={img.caption || ""} className="h-48 w-full object-cover" loading="lazy" />
+                    <img src={img.url} alt={img.caption || ""} className="h-48 w-full object-cover sm:h-56" loading="lazy" />
                     {img.caption && (
                       <figcaption className="border-t border-slate-100 px-3 py-2 text-center text-xs font-medium text-slate-500 dark:border-slate-800 dark:text-slate-400">
                         {img.caption}
@@ -361,9 +361,9 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
             <div key={id} className="relative my-8 overflow-hidden rounded-2xl bg-slate-900 min-h-[250px] sm:min-h-[350px] flex">
               {url && <img src={url} alt={overlayText} className="absolute inset-0 h-full w-full object-cover opacity-70" loading="lazy" />}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent" />
-              <div className={`relative z-10 flex w-full flex-col justify-end p-6 sm:p-10 ${alignClasses}`}>
+              <div className={`relative z-10 flex w-full flex-col justify-end p-4 sm:p-10 ${alignClasses}`}>
                 {overlayText && (
-                  <h2 className="text-2xl font-extrabold text-white sm:text-4xl lg:text-5xl max-w-3xl">{overlayText}</h2>
+                  <h2 className="text-xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-3xl break-words">{overlayText}</h2>
                 )}
                 {overlaySubtitle && (
                   <p className="mt-2 text-sm text-white/80 sm:text-base max-w-2xl">{overlaySubtitle}</p>
@@ -462,8 +462,8 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                   {card.image && (
                     <img src={card.image} alt={card.title || ""} className="h-48 w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
                   )}
-                  <div className="p-5">
-                    {card.title && <h3 className="text-lg font-bold text-slate-900 dark:text-white">{card.title}</h3>}
+                  <div className="p-4 sm:p-5">
+                    {card.title && <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white break-words">{card.title}</h3>}
                     {card.description && <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{card.description}</p>}
                   </div>
                 </div>
@@ -496,12 +496,12 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
             <div key={id} className="my-8 space-y-3">
               {items.map((pair: any, idx: number) => (
                 <details key={idx} className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-all open:shadow-md dark:border-slate-800 dark:bg-slate-900">
-                  <summary className="flex cursor-pointer items-center gap-3 px-5 py-4 text-sm font-bold text-slate-900 transition-colors hover:bg-slate-50 dark:text-white dark:hover:bg-slate-800/50">
+                  <summary className="flex cursor-pointer items-center gap-2 sm:gap-3 px-4 py-3 sm:px-5 sm:py-4 text-sm font-bold text-slate-900 transition-colors hover:bg-slate-50 dark:text-white dark:hover:bg-slate-800/50">
                     <HelpCircle className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
-                    <span className="flex-1">{pair.question}</span>
+                    <span className="flex-1 text-xs sm:text-sm leading-snug">{pair.question}</span>
                     <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-90" />
                   </summary>
-                  <div className="border-t border-slate-100 px-5 py-4 dark:border-slate-800">
+                  <div className="border-t border-slate-100 px-4 py-3 sm:px-5 sm:py-4 dark:border-slate-800">
                     <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{pair.answer}</p>
                   </div>
                 </details>
@@ -540,7 +540,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           const links = data.links || [];
           if (links.length === 0) return null;
           return (
-            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-900">
               <h3 className="mb-3 text-xs font-extrabold uppercase tracking-wider text-slate-500">Related Links</h3>
               <ul className="space-y-2">
                 {links.map((link: any, idx: number) => (
@@ -587,7 +587,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           if (headings.length < 2) return null;
           const tocTitle = data.title || "Table of Contents";
           return (
-            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50">
+            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-900/50">
               <div className="flex items-center gap-2 mb-3">
                 <ListTree className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">{tocTitle}</h3>
@@ -612,7 +612,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           if (facts.length === 0) return null;
           return (
             <div key={id} className="my-8 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-              <div className="bg-slate-50 px-5 py-3 dark:bg-slate-900">
+              <div className="bg-slate-50 px-4 py-3 sm:px-5 dark:bg-slate-900">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">District Facts</h3>
@@ -620,9 +620,9 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
               </div>
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {facts.map((fact: any, idx: number) => (
-                  <div key={idx} className="flex px-5 py-3">
-                    <span className="w-1/2 text-sm font-bold text-slate-700 dark:text-slate-300">{fact.label}</span>
-                    <span className="w-1/2 text-sm text-slate-600 dark:text-slate-400">{fact.value}</span>
+                  <div key={idx} className="flex flex-col sm:flex-row px-4 py-3 sm:px-5">
+                    <span className="w-full sm:w-1/2 text-sm font-bold text-slate-700 dark:text-slate-300">{fact.label}</span>
+                    <span className="w-full sm:w-1/2 text-sm text-slate-600 dark:text-slate-400">{fact.value}</span>
                   </div>
                 ))}
               </div>
@@ -640,24 +640,24 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                 <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Railway Stations</h3>
               </div>
               <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-                <table className="w-full text-left text-sm">
+                <table className="w-full text-left text-xs sm:text-sm">
                   <thead className="bg-slate-50 dark:bg-slate-900">
                     <tr>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Station</th>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Code</th>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Zone</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Station</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Code</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-600 dark:text-slate-400">Zone</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {stations.map((s: any, idx: number) => (
                       <tr key={idx} className="bg-white transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
-                        <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{s.name}</td>
-                        <td className="px-2 py-2 sm:px-4 sm:py-3">
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{s.name}</td>
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3">
                           <span className="inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                             {s.code}
                           </span>
                         </td>
-                        <td className="px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{s.zone}</td>
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{s.zone}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -677,22 +677,22 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
                 <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Emergency Contacts</h3>
               </div>
               <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-                <table className="w-full text-left text-sm">
+                <table className="w-full text-left text-xs sm:text-sm">
                   <thead className="bg-red-50 dark:bg-red-950/20">
                     <tr>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Service</th>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Number</th>
-                        <th className="px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Description</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Service</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Number</th>
+                      <th className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-extrabold text-slate-700 dark:text-slate-300">Description</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {contacts.map((c: any, idx: number) => (
                       <tr key={idx} className="bg-white transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/50">
-                        <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{c.service}</td>
-                        <td className="px-2 py-2 sm:px-4 sm:py-3">
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 font-semibold text-slate-900 dark:text-white">{c.service}</td>
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3">
                           <a href={`tel:${c.number}`} className="font-bold text-blue-600 hover:underline dark:text-blue-400">{c.number}</a>
                         </td>
-                        <td className="px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{c.description}</td>
+                        <td className="whitespace-nowrap px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-400">{c.description}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -741,8 +741,8 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {industries.map((ind: any, idx: number) => (
-                  <div key={idx} className="rounded-xl border border-slate-200 bg-white p-5 transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
-                    <h4 className="font-bold text-slate-900 dark:text-white">{ind.name}</h4>
+                  <div key={idx} className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                    <h4 className="font-bold text-slate-900 dark:text-white break-words">{ind.name}</h4>
                     {ind.description && <p className="mt-1.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{ind.description}</p>}
                   </div>
                 ))}
@@ -780,7 +780,7 @@ export default function BlockRenderer({ blocks, preview }: BlockRendererProps) {
           if (searches.length === 0) return null;
           const maxCount = Math.max(...searches.map((s: any) => s.count || 0), 1);
           return (
-            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+            <div key={id} className="my-8 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-900">
               <div className="mb-4 flex items-center gap-2">
                 <Search className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Popular Searches</h3>
