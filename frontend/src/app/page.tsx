@@ -80,7 +80,7 @@ export default async function HomePage() {
           </div>
 
           {states.length === 0 ? (
-            <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-12 text-center dark:border-slate-800 dark:bg-slate-900">
               <p className="text-sm font-semibold text-slate-500">No states directory loaded</p>
               <p className="text-xs text-slate-400">Database connection may be loading or database needs seeding.</p>
             </div>

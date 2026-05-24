@@ -42,13 +42,13 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaList) }}
       />
       
-      <ol className="inline-flex items-center space-x-1 md:space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+      <ol className="flex flex-wrap items-center gap-x-1 md:gap-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
         <li className="inline-flex items-center">
           <Link
             href="/"
             className="inline-flex items-center hover:text-blue-600 dark:hover:text-blue-400 gap-1"
           >
-            <Home className="h-3.5 w-3.5" />
+            <Home className="h-3.5 w-3.5 shrink-0" />
             Home
           </Link>
         </li>
@@ -57,16 +57,16 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           const isLast = index === items.length - 1;
           
           return (
-            <li key={index} className="inline-flex items-center">
-              <ChevronRight className="h-3.5 w-3.5 text-slate-300 dark:text-slate-600 mx-1 shrink-0" />
+            <li key={index} className="inline-flex items-center min-w-0">
+              <ChevronRight className="h-3.5 w-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
               {isLast || !item.link ? (
-                <span className="text-slate-900 font-extrabold truncate max-w-[150px] sm:max-w-xs dark:text-white">
+                <span className="text-slate-900 font-extrabold truncate max-w-[120px] sm:max-w-[200px] dark:text-white">
                   {item.name}
                 </span>
               ) : (
                 <Link
                   href={item.link}
-                  className="hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[150px] sm:max-w-xs"
+                  className="hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[120px] sm:max-w-[200px]"
                 >
                   {item.name}
                 </Link>

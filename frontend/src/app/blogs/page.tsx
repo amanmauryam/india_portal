@@ -67,7 +67,7 @@ export default async function BlogsPage({
         </div>
 
         {blogs.length === 0 ? (
-          <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center dark:border-slate-800 dark:bg-slate-900">
+          <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-8 sm:p-16 text-center dark:border-slate-800 dark:bg-slate-900">
             <FileText className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-700" />
             <h3 className="mt-4 text-base font-bold text-slate-950 dark:text-white">No articles published yet</h3>
             <p className="mt-2 text-xs text-slate-500">Sign in to the Admin Dashboard to write and publish your first article.</p>
