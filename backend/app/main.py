@@ -65,7 +65,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "India Hyperlocal Utility Portal API",
-        "version": "1.0.0"
+        "version": "2.0.0"
     }
 
 # Endpoint to create tables (helpful for manual testing/seeding without alembic setup)
