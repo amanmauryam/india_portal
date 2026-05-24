@@ -791,3 +791,11 @@ class BlogPostDetailOut(BlogPostOut):
     class Config:
         from_attributes = True
 
+class PaginatedStatesOut(BaseModel):
+    items: List[StateOut]
+    total: int
+
+class PaginatedBlogsOut(BaseModel):
+    items: List[BlogPostDetailOut]
+    total: int
+

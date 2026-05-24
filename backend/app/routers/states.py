@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status, Query
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
-from typing import List
+from typing import List, Optional
 
 from app.database import get_db
 from app.models import State, User
-from app.schemas import StateCreate, StateUpdate, StateOut, StateDetailOut
+from app.schemas import StateCreate, StateUpdate, StateOut, StateDetailOut, PaginatedStatesOut
 from app.auth import RoleChecker, get_current_user
 from app.services.audit_service import log_audit
 from app.services.cache_service import invalidate_entity_cache
@@ -16,11 +16,22 @@ from app.cache import cached_api_response
 router = APIRouter(prefix="/api/states", tags=["states"])
 
 # Public endpoints
-@router.get("", response_model=List[StateOut])
+@router.get("", response_model=PaginatedStatesOut)
 @cached_api_response(expire=3600, tags=["states"])
-async def get_states(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(State).order_by(State.name))
-    return result.scalars().all()
+async def get_states(
+    limit: Optional[int] = Query(None, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: AsyncSession = Depends(get_db)
+):
+    total_q = await db.execute(select(State))
+    total = len(total_q.scalars().all())
+
+    stmt = select(State).order_by(State.name)
+    if limit is not None:
+        stmt = stmt.offset(offset).limit(limit)
+    result = await db.execute(stmt)
+    items = result.scalars().all()
+    return PaginatedStatesOut(items=items, total=total)
 
 @router.get("/{slug_or_id}", response_model=StateDetailOut)
 @cached_api_response(expire=3600, tags=["states"])

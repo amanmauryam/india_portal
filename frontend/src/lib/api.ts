@@ -52,8 +52,10 @@ export async function request(path: string, options: RequestInit = {}) {
 // PUBLIC API METHODS
 // ==========================================
 
-export async function getStates() {
-  return request("/api/states");
+export async function getStates(limit?: number, offset = 0) {
+  let path = "/api/states";
+  if (limit !== undefined) path += `?limit=${limit}&offset=${offset}`;
+  return request(path);
 }
 
 export async function getState(slugOrId: string) {
@@ -81,9 +83,13 @@ export async function getService(serviceId: string) {
   return request(`/api/services/${serviceId}`);
 }
 
-export async function getBlogs(statusFilter?: string) {
-  const query = statusFilter !== undefined ? `?status_filter=${encodeURIComponent(statusFilter)}` : "?status_filter=";
-  return request(`/api/blogs${query}`);
+export async function getBlogs(statusFilter?: string, limit?: number, offset = 0) {
+  let path = "/api/blogs";
+  const params: string[] = [];
+  if (statusFilter !== undefined) params.push(`status_filter=${encodeURIComponent(statusFilter)}`);
+  if (limit !== undefined) params.push(`limit=${limit}&offset=${offset}`);
+  if (params.length) path += "?" + params.join("&");
+  return request(path);
 }
 
 export async function getBlog(slugOrId: string) {
@@ -191,7 +197,7 @@ export async function search(q: string, limit = 20, offset = 0) {
 export async function adminGetBlogs(token?: string) {
   return request("/api/blogs?status_filter=", {
     headers: getAuthHeaders(token),
-  });
+  }).then(r => r.items || r);
 }
 
 export async function adminCreateBlog(data: any, token?: string) {

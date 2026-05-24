@@ -20,7 +20,7 @@ export default function AdminStatesPage() {
     setLoading(true);
     try {
       const data = await getStates();
-      setStates(data || []);
+      setStates(data?.items || []);
     } catch (err: any) {
       console.error("Failed to load states:", err);
       setError("Failed to fetch states directory from backend.");

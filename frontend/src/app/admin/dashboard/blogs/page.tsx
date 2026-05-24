@@ -33,7 +33,7 @@ export default function AdminBlogsPage() {
     setLoading(true);
     try {
       const data = await getBlogs(filter);
-      setBlogs(data || []);
+      setBlogs(data?.items || []);
     } catch (err: any) {
       setError("Failed to load blog posts.");
     } finally {

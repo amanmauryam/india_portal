@@ -40,7 +40,7 @@ export default function AdminDistrictsPage() {
     setLoading(true);
     try {
       const statesData = await getStates();
-      setStates(statesData || []);
+      setStates(statesData?.items || []);
       
       const distData = await request("/api/districts");
       setDistricts(distData || []);

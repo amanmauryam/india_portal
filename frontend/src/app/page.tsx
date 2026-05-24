@@ -25,11 +25,11 @@ export default async function HomePage() {
 
   try {
     const [statesData, blogsData] = await Promise.all([
-      getStates(),
-      getBlogs()
+      getStates(3),
+      getBlogs("PUBLISHED", 3)
     ]);
-    states = statesData || [];
-    blogs = blogsData || [];
+    states = statesData?.items || [];
+    blogs = blogsData?.items || [];
   } catch (err) {
     console.error("Failed to load homepage SSR data:", err);
   }
@@ -70,6 +70,13 @@ export default async function HomePage() {
                 Select your state to access district-level utility connections and intelligence sheets.
               </p>
             </div>
+            <Link
+              href="/states"
+              className="mt-4 md:mt-0 inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
+            >
+              View All States
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
           {states.length === 0 ? (
@@ -105,13 +112,22 @@ export default async function HomePage() {
         {/* Security & Blogs Section */}
         <section className="border-t border-slate-200 bg-slate-50/50 py-16 dark:border-slate-800 dark:bg-slate-950/20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 text-center sm:text-left">
-              <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
-                Recent Advisories & Guides
-              </h2>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                Official announcements and blog articles detailing online utility safety and hyperlocal guides.
-              </p>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 text-center sm:text-left">
+              <div>
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+                  Recent Advisories & Guides
+                </h2>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                  Official announcements and blog articles detailing online utility safety and hyperlocal guides.
+                </p>
+              </div>
+              <Link
+                href="/blogs"
+                className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
+              >
+                View All Articles
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
             {blogs.length === 0 ? (

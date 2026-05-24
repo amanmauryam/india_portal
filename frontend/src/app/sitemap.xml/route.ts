@@ -5,18 +5,22 @@ const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL || "https://bharatlocal.go
 export async function GET() {
   try {
     // Fetch all states, districts, services, and blogs in parallel
-    const [states, districts, services, blogs] = await Promise.all([
+    const [statesRes, districts, services, blogsRes] = await Promise.all([
       getStates(),
       request("/api/districts"),
       request("/api/services"),
       request("/api/blogs")
     ]);
 
+    const states = Array.isArray(statesRes) ? statesRes : statesRes?.items || [];
+    const blogs = Array.isArray(blogsRes) ? blogsRes : blogsRes?.items || [];
+
     const urls: string[] = [];
 
     // 1. Static Pages
     urls.push(`${PORTAL_URL}/`);
     urls.push(`${PORTAL_URL}/blogs`);
+    urls.push(`${PORTAL_URL}/states`);
     urls.push(`${PORTAL_URL}/privacy-policy`);
     urls.push(`${PORTAL_URL}/cookie-policy`);
     urls.push(`${PORTAL_URL}/terms`);

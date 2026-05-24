@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status, Query
 from sqlalchemy.future import select
+from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
@@ -7,7 +8,7 @@ from typing import List, Optional
 
 from app.database import get_db
 from app.models import BlogPost, User
-from app.schemas import BlogPostCreate, BlogPostUpdate, BlogPostOut, BlogPostDetailOut
+from app.schemas import BlogPostCreate, BlogPostUpdate, BlogPostOut, BlogPostDetailOut, PaginatedBlogsOut
 from app.auth import RoleChecker, get_current_user
 from app.services.audit_service import log_audit
 from app.services.cache_service import invalidate_entity_cache
@@ -16,18 +17,26 @@ from app.cache import cached_api_response
 router = APIRouter(prefix="/api/blogs", tags=["blogs"])
 
 
-@router.get("", response_model=List[BlogPostDetailOut])
+@router.get("", response_model=PaginatedBlogsOut)
 @cached_api_response(expire=3600, tags=["blogs"])
 async def get_blogs(
     status_filter: Optional[str] = "PUBLISHED",
+    limit: Optional[int] = Query(None, ge=1, le=50),
+    offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db)
 ):
-    stmt = select(BlogPost).options(selectinload(BlogPost.author))
+    total_q = select(func.count(BlogPost.id))
+    if status_filter:
+        total_q = total_q.where(BlogPost.status == status_filter)
+    total_result = await db.execute(total_q)
+    total = total_result.scalar()
 
+    stmt = select(BlogPost).options(selectinload(BlogPost.author))
     if status_filter:
         stmt = stmt.where(BlogPost.status == status_filter)
-
     stmt = stmt.order_by(BlogPost.created_at.desc())
+    if limit is not None:
+        stmt = stmt.offset(offset).limit(limit)
     result = await db.execute(stmt)
     posts = result.scalars().all()
 
@@ -37,7 +46,7 @@ async def get_blogs(
         detail.author_name = post.author.full_name if post.author else "Unknown Author"
         out_posts.append(detail)
 
-    return out_posts
+    return PaginatedBlogsOut(items=out_posts, total=total)
 
 
 @router.get("/{slug_or_id}", response_model=BlogPostDetailOut)

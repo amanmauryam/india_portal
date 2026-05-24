@@ -3,6 +3,7 @@ import { getBlogs } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumb from "@/components/Breadcrumb";
+import Pagination from "@/components/Pagination";
 import { ShieldAlert, FileText, ArrowRight, Calendar } from "lucide-react";
 import { Metadata } from "next";
 
@@ -20,19 +21,31 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 60; // ISR - 1 minute
+export const revalidate = 60;
 
-export default async function BlogsPage() {
+const LIMIT = 10;
+
+export default async function BlogsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const sp = await searchParams;
+  const page = Math.max(1, parseInt(sp.page || "1", 10) || 1);
+  const offset = (page - 1) * LIMIT;
+
   let blogs: any[] = [];
+  let total = 0;
   try {
-    blogs = await getBlogs() || [];
+    const data = await getBlogs("PUBLISHED", LIMIT, offset);
+    blogs = data?.items || [];
+    total = data?.total || 0;
   } catch (err) {
     console.error("Failed to load blog posts:", err);
   }
 
-  const breadcrumbs = [
-    { name: "Blog & Security Advisories" }
-  ];
+  const totalPages = Math.ceil(total / LIMIT);
+  const breadcrumbs = [{ name: "Blog & Security Advisories" }];
 
   return (
     <>
@@ -60,42 +73,47 @@ export default async function BlogsPage() {
             <p className="mt-2 text-xs text-slate-500">Sign in to the Admin Dashboard to write and publish your first article.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {blogs.map((post) => (
-              <article
-                key={post.id}
-                className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div>
-                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wide">
-                    <span>{post.status}</span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5" />
-                      {new Date(post.created_at).toLocaleDateString()}
-                    </span>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {blogs.map((post) => (
+                <article
+                  key={post.id}
+                  className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div>
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                      <span>{post.status}</span>
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <h2 className="mt-4 text-xl font-extrabold text-slate-950 dark:text-white line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400">
+                      <Link href={`/blogs/${post.slug}`}>{post.title}</Link>
+                    </h2>
+                    <p className="mt-3 text-xs leading-relaxed text-slate-650 dark:text-slate-400 line-clamp-3">
+                      {post.meta_description}
+                    </p>
                   </div>
-                  <h2 className="mt-4 text-xl font-extrabold text-slate-950 dark:text-white line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400">
-                    <Link href={`/blogs/${post.slug}`}>{post.title}</Link>
-                  </h2>
-                  <p className="mt-3 text-xs leading-relaxed text-slate-650 dark:text-slate-400 line-clamp-3">
-                    {post.meta_description}
-                  </p>
-                </div>
-                <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
-                  <p className="text-[10px] text-slate-500 font-semibold">
-                    Published by: <span className="text-slate-800 dark:text-slate-200">{post.author_name}</span>
-                  </p>
-                  <Link
-                    href={`/blogs/${post.slug}`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:underline dark:text-blue-400"
-                  >
-                    Read Guide
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
+                    <p className="text-[10px] text-slate-500 font-semibold">
+                      Published by: <span className="text-slate-800 dark:text-slate-200">{post.author_name}</span>
+                    </p>
+                    <Link
+                      href={`/blogs/${post.slug}`}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      Read Guide
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+            {totalPages > 1 && (
+              <Pagination currentPage={page} totalPages={totalPages} basePath="/blogs" />
+            )}
+          </>
         )}
       </main>
 
