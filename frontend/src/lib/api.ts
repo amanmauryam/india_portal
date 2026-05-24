@@ -66,10 +66,6 @@ export async function getDistrictBySlug(stateSlug: string, districtSlug: string)
   return request(`/api/districts/by-slug/${stateSlug}/${districtSlug}`);
 }
 
-export async function getDistrict(slugOrId: string) {
-  return request(`/api/districts/${slugOrId}`);
-}
-
 export async function getServices(districtId?: string) {
   const query = districtId ? `?district_id=${districtId}` : "";
   return request(`/api/services${query}`);
@@ -77,10 +73,6 @@ export async function getServices(districtId?: string) {
 
 export async function getServiceBySlug(stateSlug: string, districtSlug: string, serviceSlug: string) {
   return request(`/api/services/by-slug/${stateSlug}/${districtSlug}/${serviceSlug}`);
-}
-
-export async function getService(serviceId: string) {
-  return request(`/api/services/${serviceId}`);
 }
 
 export async function getBlogs(statusFilter?: string, limit?: number, offset = 0) {
@@ -194,23 +186,9 @@ export async function search(q: string, limit = 20, offset = 0) {
 }
 
 // Admin Blogs CRUD
-export async function adminGetBlogs(token?: string) {
-  return request("/api/blogs?status_filter=", {
-    headers: getAuthHeaders(token),
-  }).then(r => r.items || r);
-}
-
 export async function adminCreateBlog(data: any, token?: string) {
   return request("/api/blogs", {
     method: "POST",
-    headers: getAuthHeaders(token),
-    body: JSON.stringify(data),
-  });
-}
-
-export async function adminUpdateBlog(id: string, data: any, token?: string) {
-  return request(`/api/blogs/${id}`, {
-    method: "PUT",
     headers: getAuthHeaders(token),
     body: JSON.stringify(data),
   });

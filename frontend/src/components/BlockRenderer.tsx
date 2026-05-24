@@ -1,10 +1,9 @@
 import Link from "next/link";
 import {
-  AlertCircle, AlertTriangle, Bell, ShieldAlert, Info, CheckCircle2,
-  Quote, ChevronRight, ChevronLeft, ExternalLink, ArrowRight,
+  AlertTriangle, Bell, ShieldAlert, Info, CheckCircle2,
+  Quote, ChevronRight, ExternalLink, ArrowRight,
   HelpCircle, MapPin, Train, ShoppingBag, Factory, PhoneCall,
-  Building2, SunDim, Search, ListTree, Highlighter,
-  Columns2, Columns3, LayoutGrid, Star
+  SunDim, Search, ListTree, Highlighter,
 } from "lucide-react";
 import { createElement, Fragment } from "react";
 

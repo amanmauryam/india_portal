@@ -2,15 +2,15 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
-  GripVertical, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
+  GripVertical, Heading1,
   Text, Quote, Info, TriangleAlert, Bell, ShieldAlert, Highlighter,
   Image, Images, RectangleHorizontal, Video, Columns2, Columns3, Grid3x3,
   LayoutGrid, CheckSquare, HelpCircle, Link, MousePointerClick, ListTree,
-  MapPin, Train, ShoppingBag, Factory, PhoneCall, Building2, SunDim, Search,
+  MapPin, Train, ShoppingBag, Factory, PhoneCall, SunDim, Search,
   Plus, Trash2, Copy, Eye, EyeOff, ArrowUp, ArrowDown, ChevronDown, ChevronRight,
-  Monitor, Tablet, Smartphone, X, Check, Loader2, PanelRightClose, Menu,
-  Bold, Italic, Underline, List, ListOrdered, Table, Type, AlignLeft, AlignCenter, AlignRight,
-  Undo, Redo, Star, PaintBucket, FileText
+  Monitor, Tablet, Smartphone, X, Check, PanelRightClose, Menu,
+  Bold, Italic, Underline, List, ListOrdered, Table, Type,
+  Star, FileText
 } from "lucide-react";
 
 interface Block {
