@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.config import CORS_ORIGINS
+from app.config import CORS_ORIGINS, PORT
 from app.routers import auth, states, districts, services, blogs, search, analytics, page_templates, workflow, seo_gen, admin, categories, templates, reusable_components, verified_portals
 from app.database import Base, engine
 from app.middleware import RateLimitMiddleware
