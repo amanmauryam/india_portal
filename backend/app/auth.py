@@ -1,5 +1,5 @@
 import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
@@ -63,7 +63,7 @@ async def get_current_user(
         )
         session = sess_result.scalars().first()
         if session:
-            session.last_activity = datetime.utcnow()
+            session.last_activity = datetime.now(timezone.utc)
             await db.commit()
     except Exception:
         pass  # session tracking is non-critical

@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app.database import get_db
 from app.models import User, UserSession
@@ -60,7 +60,7 @@ async def login_json(credentials: LoginRequest, request: Request, db: AsyncSessi
         ip_address=request.client.host if request.client else None,
         user_agent=request.headers.get("user-agent"),
         is_active=True,
-        last_activity=datetime.utcnow(),
+        last_activity=datetime.now(timezone.utc),
     )
     db.add(session)
     await db.commit()
@@ -94,7 +94,7 @@ async def login_form(form_data: OAuth2PasswordRequestForm = Depends(), request: 
         ip_address=request.client.host if request and request.client else None,
         user_agent=request.headers.get("user-agent") if request else None,
         is_active=True,
-        last_activity=datetime.utcnow(),
+        last_activity=datetime.now(timezone.utc),
     )
     db.add(session)
     await db.commit()
@@ -142,3 +142,25 @@ async def change_password(
     current_user.hashed_password = get_password_hash(req.new_password)
     await db.commit()
     return {"status": "success", "message": "Password changed successfully"}
+
+
+@router.post("/logout")
+async def logout(
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    auth_header = request.headers.get("Authorization", "")
+    token = auth_header.replace("Bearer ", "")
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    result = await db.execute(
+        select(UserSession).where(
+            UserSession.token_hash == token_hash,
+            UserSession.user_id == current_user.id,
+        )
+    )
+    session = result.scalars().first()
+    if session:
+        session.is_active = False
+        await db.commit()
+    return {"status": "success", "message": "Logged out successfully"}

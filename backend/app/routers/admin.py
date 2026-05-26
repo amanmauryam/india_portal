@@ -1,7 +1,7 @@
 import io
 import os
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
 from sqlalchemy.future import select
 from sqlalchemy import desc, func
@@ -342,7 +342,7 @@ async def get_online_count(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(RoleChecker(["SUPER_ADMIN", "ADMIN"])),
 ):
-    five_min_ago = datetime.utcnow() - timedelta(minutes=5)
+    five_min_ago = datetime.now(timezone.utc) - timedelta(minutes=5)
     stmt = select(func.count(UserSession.id)).where(
         UserSession.is_active == True,
         UserSession.last_activity >= five_min_ago,
@@ -505,13 +505,22 @@ async def get_sessions(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(RoleChecker(["SUPER_ADMIN", "ADMIN"])),
 ):
-    five_min_ago = datetime.utcnow() - timedelta(minutes=5)
+    cutoff = datetime.now(timezone.utc) - timedelta(minutes=5)
+    stmt_old = await db.execute(
+        select(UserSession).where(
+            UserSession.is_active == True,
+            UserSession.last_activity < cutoff,
+        )
+    )
+    for old_sess in stmt_old.scalars().all():
+        old_sess.is_active = False
+    await db.commit()
     stmt = (
         select(UserSession, User.full_name, User.role)
         .join(User, UserSession.user_id == User.id)
         .where(
             UserSession.is_active == True,
-            UserSession.last_activity >= five_min_ago,
+            UserSession.last_activity >= cutoff,
         )
         .order_by(desc(UserSession.last_activity))
     )
