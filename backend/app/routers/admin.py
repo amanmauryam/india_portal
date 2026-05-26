@@ -104,6 +104,7 @@ async def update_user(
 
     if current_user.role != "SUPER_ADMIN":
         update_data.pop("role", None)
+        update_data.pop("is_active", None)
 
     for field, value in update_data.items():
         setattr(user, field, value)
