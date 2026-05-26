@@ -31,10 +31,10 @@ export default function AdminDashboardPage() {
           request("/api/blogs"),
         ]);
         setStats({
-          states: Array.isArray(states) ? states.length : 0,
-          districts: Array.isArray(districts) ? districts.length : 0,
-          services: Array.isArray(services) ? services.length : 0,
-          blogs: Array.isArray(blogs) ? blogs.length : 0,
+          states: states?.total ?? (Array.isArray(states) ? states.length : 0),
+          districts: districts?.total ?? (Array.isArray(districts) ? districts.length : 0),
+          services: services?.total ?? (Array.isArray(services) ? services.length : 0),
+          blogs: blogs?.total ?? (Array.isArray(blogs) ? blogs.length : 0),
         });
       } catch {}
     };
