@@ -699,21 +699,21 @@ async def restore_version(
 # Permissions
 # ==========================================
 PERMISSIONS_LIST = [
-    "users.manage",
-    "media.upload",
-    "media.delete",
-    "tasks.create",
-    "tasks.assign",
-    "content.create",
-    "content.publish",
-    "content.delete",
-    "seo.manage",
-    "analytics.view",
-    "monetization.manage",
-    "settings.manage",
+    "create_content",
+    "edit_content",
+    "delete_content",
+    "publish_content",
+    "manage_users",
+    "manage_media",
+    "manage_districts",
+    "manage_services",
+    "access_analytics",
+    "manage_seo",
+    "manage_ad_slots",
+    "view_audit_logs",
 ]
 
-ROLES_LIST = ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR", "CONTRIBUTOR", "VIEWER"]
+ROLES_LIST = ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR", "REVIEWER", "VIEWER"]
 
 
 @router.get("/permissions")
@@ -730,17 +730,11 @@ async def get_permissions(
             perm_map[r.role] = []
         perm_map[r.role].append(r.permission)
 
-    roles_output = []
     for role in ROLES_LIST:
-        roles_output.append({
-            "role": role,
-            "permissions": perm_map.get(role, []),
-        })
+        if role not in perm_map:
+            perm_map[role] = []
 
-    return {
-        "roles": roles_output,
-        "all_permissions": PERMISSIONS_LIST,
-    }
+    return perm_map
 
 
 @router.put("/permissions")
@@ -749,18 +743,18 @@ async def update_permissions(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(RoleChecker(["SUPER_ADMIN"])),
 ):
-    roles_data = data.get("roles", [])
-
     result = await db.execute(select(RolePermission))
     existing = result.scalars().all()
     for r in existing:
         await db.delete(r)
     await db.commit()
 
-    for role_entry in roles_data:
-        role_name = role_entry.get("role")
-        permissions = role_entry.get("permissions", [])
+    for role_name, permissions in data.items():
+        if role_name not in ROLES_LIST:
+            continue
         for perm in permissions:
+            if perm not in PERMISSIONS_LIST:
+                continue
             rp = RolePermission(role=role_name, permission=perm)
             db.add(rp)
 
