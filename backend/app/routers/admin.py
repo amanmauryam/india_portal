@@ -51,6 +51,9 @@ async def create_user(
     if result.scalars().first():
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    if current_user.role != "SUPER_ADMIN" and user_in.role in ("SUPER_ADMIN", "ADMIN"):
+        raise HTTPException(status_code=403, detail="Only Super Admin can assign SUPER_ADMIN or ADMIN roles")
+
     user = User(
         email=user_in.email,
         hashed_password=get_password_hash(user_in.password),
@@ -98,6 +101,9 @@ async def update_user(
         update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
     elif "password" in update_data:
         update_data.pop("password")
+
+    if current_user.role != "SUPER_ADMIN":
+        update_data.pop("role", None)
 
     for field, value in update_data.items():
         setattr(user, field, value)

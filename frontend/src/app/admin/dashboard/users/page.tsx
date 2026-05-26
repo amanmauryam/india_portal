@@ -15,6 +15,7 @@ export default function AdminUsersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [form, setForm] = useState({ email: "", full_name: "", password: "", role: "DISTRICT_EDITOR", is_active: true });
+  const [currentUserRole, setCurrentUserRole] = useState("");
 
   const token = () => localStorage.getItem("token") || "";
 
@@ -28,7 +29,7 @@ export default function AdminUsersPage() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { loadUsers(); }, []);
+  useEffect(() => { setCurrentUserRole(localStorage.getItem("userRole") || ""); loadUsers(); }, []);
 
   const openCreate = () => {
     setEditingUser(null);
@@ -173,9 +174,15 @@ export default function AdminUsersPage() {
               )}
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Role</label>
-                <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} className="mt-2 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-white">
-                  {ROLES.map(r => <option key={r} value={r}>{r.replace("_", " ")}</option>)}
-                </select>
+                {currentUserRole === "SUPER_ADMIN" ? (
+                  <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} className="mt-2 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-white">
+                    {ROLES.map(r => <option key={r} value={r}>{r.replace("_", " ")}</option>)}
+                  </select>
+                ) : (
+                  <div className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
+                    {form.role.replace("_", " ")}
+                  </div>
+                )}
               </div>
               <label className="flex items-center gap-3">
                 <input type="checkbox" checked={form.is_active} onChange={e => setForm(f => ({ ...f, is_active: e.target.checked }))} className="h-4 w-4 rounded border-slate-300 text-blue-600" />

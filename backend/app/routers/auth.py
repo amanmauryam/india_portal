@@ -115,6 +115,7 @@ async def update_me(
     update_data = user_in.model_dump(exclude_unset=True)
     if "password" in update_data:
         update_data.pop("password")
+    update_data.pop("role", None)
 
     for field, value in update_data.items():
         setattr(current_user, field, value)
