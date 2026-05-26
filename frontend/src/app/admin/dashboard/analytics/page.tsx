@@ -114,7 +114,7 @@ export default function AdminAnalyticsPage() {
           {metrics.top_districts && metrics.top_districts.length > 0 && (
             <div className="rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Top Districts by Views</h3>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white">Top Districts by Views ( On live website )</h3>
               </div>
               <div className="p-5 space-y-3">
                 {metrics.top_districts.map((d: any, i: number) => (
@@ -133,7 +133,7 @@ export default function AdminAnalyticsPage() {
           {metrics.trending_queries && metrics.trending_queries.length > 0 && (
             <div className="rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="text-xs font-black text-slate-900 dark:text-white">Trending Search Queries</h3>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white">Trending Search Queries ( Searched on website )</h3>
               </div>
               <div className="p-5 space-y-3">
                 {metrics.trending_queries.map((q: any, i: number) => (
