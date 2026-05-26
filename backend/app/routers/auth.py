@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta, timezone
 
 from app.database import get_db
-from app.models import User, UserSession
+from app.models import User, UserSession, RolePermission
 from app.schemas import UserCreate, UserOut, UserUpdate, Token, LoginRequest
 from app.auth import get_password_hash, verify_password, create_access_token, get_current_user
 
@@ -142,6 +142,18 @@ async def change_password(
     current_user.hashed_password = get_password_hash(req.new_password)
     await db.commit()
     return {"status": "success", "message": "Password changed successfully"}
+
+
+@router.get("/my-permissions")
+async def get_my_permissions(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    result = await db.execute(
+        select(RolePermission).where(RolePermission.role == current_user.role)
+    )
+    rows = result.scalars().all()
+    return {"role": current_user.role, "permissions": [r.permission for r in rows]}
 
 
 @router.post("/logout")

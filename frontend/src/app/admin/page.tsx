@@ -29,13 +29,21 @@ export default function AdminLoginPage() {
 
     try {
       const data = await login(email, password);
-      // Persist credentials
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("userRole", data.user.role);
       localStorage.setItem("userName", data.user.full_name);
       localStorage.setItem("userEmail", data.user.email);
       
-      // Redirect to dashboard
+      try {
+        const permRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"}/api/auth/my-permissions`, {
+          headers: { Authorization: `Bearer ${data.access_token}` },
+        });
+        if (permRes.ok) {
+          const permData = await permRes.json();
+          localStorage.setItem("userPermissions", JSON.stringify(permData.permissions || []));
+        }
+      } catch {}
+      
       router.push("/admin/dashboard");
     } catch (err: any) {
       console.error("Login failed:", err);

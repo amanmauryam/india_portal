@@ -20,6 +20,7 @@ interface MenuItem {
   link: string;
   icon: React.ComponentType<{ className?: string }>;
   roles: Role[];
+  permissions?: string[];
 }
 
 interface MenuGroup {
@@ -32,37 +33,37 @@ const menuGroups: MenuGroup[] = [
     label: "Content",
     items: [
       { name: "Dashboard", link: "/admin/dashboard", icon: LayoutDashboard, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR", "CONTRIBUTOR", "VIEWER"] },
-      { name: "States", link: "/admin/dashboard/states", icon: Landmark, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
-      { name: "Districts", link: "/admin/dashboard/districts", icon: MapPin, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"] },
-      { name: "Services", link: "/admin/dashboard/services", icon: Award, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"] },
-      { name: "Categories", link: "/admin/dashboard/categories", icon: FolderTree, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
-      { name: "Blog Posts", link: "/admin/dashboard/blogs", icon: FileText, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR", "CONTRIBUTOR"] },
-      { name: "Verified Portals", link: "/admin/dashboard/verified-portals", icon: ShieldCheck, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"] },
+      { name: "States", link: "/admin/dashboard/states", icon: Landmark, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["manage_districts"] },
+      { name: "Districts", link: "/admin/dashboard/districts", icon: MapPin, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"], permissions: ["manage_districts"] },
+      { name: "Services", link: "/admin/dashboard/services", icon: Award, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"], permissions: ["manage_services"] },
+      { name: "Categories", link: "/admin/dashboard/categories", icon: FolderTree, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["manage_districts", "manage_services"] },
+      { name: "Blog Posts", link: "/admin/dashboard/blogs", icon: FileText, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR", "CONTRIBUTOR"], permissions: ["create_content", "edit_content"] },
+      { name: "Verified Portals", link: "/admin/dashboard/verified-portals", icon: ShieldCheck, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"], permissions: ["manage_services"] },
     ],
   },
   {
     label: "Management",
     items: [
-      { name: "Users", link: "/admin/dashboard/users", icon: Users, roles: ["SUPER_ADMIN", "ADMIN"] },
-      { name: "Media", link: "/admin/dashboard/media", icon: Image, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"] },
-      { name: "Tasks", link: "/admin/dashboard/tasks", icon: ListTodo, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
-      { name: "Pages/SEO", link: "/admin/dashboard/seo", icon: FileCode2, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
+      { name: "Users", link: "/admin/dashboard/users", icon: Users, roles: ["SUPER_ADMIN", "ADMIN"], permissions: ["manage_users"] },
+      { name: "Media", link: "/admin/dashboard/media", icon: Image, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER", "DISTRICT_EDITOR"], permissions: ["manage_media"] },
+      { name: "Tasks", link: "/admin/dashboard/tasks", icon: ListTodo, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["manage_users", "manage_media"] },
+      { name: "Pages/SEO", link: "/admin/dashboard/seo", icon: FileCode2, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["manage_seo"] },
       { name: "Permissions", link: "/admin/dashboard/permissions", icon: Shield, roles: ["SUPER_ADMIN"] },
     ],
   },
   {
     label: "Insights",
     items: [
-      { name: "Analytics", link: "/admin/dashboard/analytics", icon: BarChart3, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
-      { name: "Activity Log", link: "/admin/dashboard/activity", icon: Activity, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"] },
-      { name: "Online Users", link: "/admin/dashboard/online", icon: Eye, roles: ["SUPER_ADMIN", "ADMIN"] },
-      { name: "Version History", link: "/admin/dashboard/versions", icon: GitBranch, roles: ["SUPER_ADMIN", "ADMIN"] },
+      { name: "Analytics", link: "/admin/dashboard/analytics", icon: BarChart3, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["access_analytics"] },
+      { name: "Activity Log", link: "/admin/dashboard/activity", icon: Activity, roles: ["SUPER_ADMIN", "ADMIN", "STATE_MANAGER"], permissions: ["view_audit_logs"] },
+      { name: "Online Users", link: "/admin/dashboard/online", icon: Eye, roles: ["SUPER_ADMIN", "ADMIN"], permissions: ["manage_users"] },
+      { name: "Version History", link: "/admin/dashboard/versions", icon: GitBranch, roles: ["SUPER_ADMIN", "ADMIN"], permissions: ["manage_seo"] },
     ],
   },
   {
     label: "Monetization",
     items: [
-      { name: "Ad Slots", link: "/admin/dashboard/monetization", icon: DollarSign, roles: ["SUPER_ADMIN", "ADMIN"] },
+      { name: "Ad Slots", link: "/admin/dashboard/monetization", icon: DollarSign, roles: ["SUPER_ADMIN", "ADMIN"], permissions: ["manage_ad_slots"] },
     ],
   },
 ];
@@ -72,6 +73,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   const pathname = usePathname();
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [authChecked, setAuthChecked] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
@@ -80,6 +82,12 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("userRole") || "";
     const name = localStorage.getItem("userName") || "";
+    setUserRole(role);
+    setUserName(name);
+    try {
+      const storedPerms = JSON.parse(localStorage.getItem("userPermissions") || "[]");
+      setUserPermissions(storedPerms);
+    } catch {}
     if (!token) { router.push("/admin"); return; }
 
     // Validate the token with the server
@@ -88,6 +96,15 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         await getMe(token);
         setUserName(name);
         setUserRole(role);
+        const permRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"}/api/auth/my-permissions`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (permRes.ok) {
+          const permData = await permRes.json();
+          const perms = permData.permissions || [];
+          setUserPermissions(perms);
+          localStorage.setItem("userPermissions", JSON.stringify(perms));
+        }
         setAuthChecked(true);
       } catch {
         localStorage.removeItem("token");
@@ -124,6 +141,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     localStorage.removeItem("userRole");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userPermissions");
     router.push("/admin");
   };
 
@@ -175,7 +193,12 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         {/* Navigation Groups */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-6">
           {menuGroups.map((group) => {
-            const visibleItems = group.items.filter((item) => item.roles.includes(userRole as Role));
+            const visibleItems = group.items.filter((item) => {
+              if (!item.roles.includes(userRole as Role)) return false;
+              if (userRole === "SUPER_ADMIN") return true;
+              if (!item.permissions || item.permissions.length === 0) return true;
+              return item.permissions.some(p => userPermissions.includes(p));
+            });
             if (visibleItems.length === 0) return null;
             return (
               <div key={group.label}>
