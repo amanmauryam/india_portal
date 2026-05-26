@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing tag" }, { status: 400 });
   }
 
-  revalidateTag(tag);
+  revalidateTag(tag, "default");
 
   return NextResponse.json({ revalidated: true, tag });
 }
